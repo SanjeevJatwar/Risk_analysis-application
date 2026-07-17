@@ -21,7 +21,7 @@ export default function ClientForm({
       </div>
 
       <div style={{ marginBottom: '10px' }}>
-        <label>Credit Limit (NTD): </label>
+        <label>Credit Limit: </label>
         <input type="number" value={formData.LIMIT_BAL} onChange={(e) => handleInputChange('LIMIT_BAL', e.target.value)} required style={{ marginRight: '15px' }} />
         
         <label>Age: </label>
