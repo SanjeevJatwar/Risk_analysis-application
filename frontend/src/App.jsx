@@ -75,8 +75,8 @@ function App() {
 
     const payload = {};
     const numericKeys = [
-      'LIMIT_BAL', 'BILL_AMT1', 'BILL_AMT2', 'BILL_AMT3',
-      'BILL_AMT4', 'BILL_AMT5', 'BILL_AMT6',
+      'LIMIT_BAL', 'BILL_AMT1', 'BILL_AMT2', 'BILL_AMT3', 
+      'BILL_AMT4', 'BILL_AMT5', 'BILL_AMT6', 
       'PAY_AMT1', 'PAY_AMT2', 'PAY_AMT3', 'PAY_AMT4', 'PAY_AMT5', 'PAY_AMT6'
     ];
     for (const key in formData) {
@@ -101,102 +101,62 @@ function App() {
   };
 
   return (
-    <div className="fade-in">
-      <div className="dashboard-container">
-        <header className="dashboard-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div>
-              <h1 style={{ margin: 0, textAlign: 'left' }}>Aegis Risk</h1>
-              <p style={{margin: 0, textAlign: 'left' }}>Credit Default Machine Learning System</p>
-            </div>
+    <div style={{ maxWidth: '950px', margin: '0 auto', padding: '20px', fontFamily: 'system-ui, sans-serif' }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '20px' }}>
+        <div>
+          <h2 style={{ margin: 0 }}>Default Risk Assessment</h2>
+          <p style={{ margin: '5px 0 0 0', fontSize: '0.9rem', color: '#888' }}>XGBoost Classifier Prediction Pipeline</p>
+        </div>
+        <div>
+          <button onClick={() => setActiveTab('evaluator')} style={{ marginRight: '10px', padding: '6px 12px', fontWeight: activeTab === 'evaluator' ? 'bold' : 'normal' }}>Evaluator</button>
+          <button onClick={() => setActiveTab('technical')} style={{ padding: '6px 12px', fontWeight: activeTab === 'technical' ? 'bold' : 'normal' }}>Model Info</button>
+        </div>
+      </header>
+
+      {error && (
+        <div style={{ color: 'red', border: '1px solid red', padding: '10px', borderRadius: '5px', marginBottom: '15px' }}>
+          <strong>Error:</strong> {error}
+        </div>
+      )}
+
+      {activeTab === 'evaluator' ? (
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px' }}>
+          <ClientForm 
+            formData={formData} 
+            handleInputChange={handleInputChange} 
+            loadProfile={loadProfile} 
+            handlePredict={handlePredict} 
+            loading={loading} 
+            MONTH_LABELS={MONTH_LABELS} 
+            profiles={PROFILES} 
+          />
+          <div>
+            <RiskGauge predictionResult={predictionResult} loading={loading} />
+            <RiskMetrics predictionResult={predictionResult} />
           </div>
+        </div>
+      ) : (
+        <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '5px', textAlign: 'left' }}>
+          <h3>Model Architecture & Performance</h3>
+          <p>This application implements an end-to-end machine learning pipeline deploying a supervised classifier for default risk estimation.</p>
+          
+          <h4>1. Model Pipeline Specs</h4>
+          <ul>
+            <li><strong>Model Algorithm:</strong> XGBoost Classifier</li>
+            <li><strong>Performance:</strong> Evaluated using Stratified 5-Fold Cross-Validation, achieving a <strong>0.7619 AUC-ROC</strong>.</li>
+            <li><strong>Training Dataset:</strong> UCI Credit Card Default database (30,000 clients).</li>
+          </ul>
 
-          <div className="tabs-container">
-            <button className={`tab-btn ${activeTab === 'evaluator' ? 'active' : ''}`} onClick={() => setActiveTab('evaluator')}>
-              Evaluator Dashboard
-            </button>
-            <button className={`tab-btn ${activeTab === 'technical' ? 'active' : ''}`} onClick={() => setActiveTab('technical')}>
-              Technical Things
-            </button>
-          </div>
-        </header>
-        {activeTab === 'evaluator' ? (
-          <div className="dashboard-grid">
-            <ClientForm 
-              formData={formData} 
-              handleInputChange={handleInputChange} 
-              loadProfile={loadProfile} 
-              handlePredict={handlePredict} 
-              loading={loading} 
-              MONTH_LABELS={MONTH_LABELS} 
-              profiles={PROFILES} 
-            />
-            <div className="flex-col gap-lg">
-              <RiskGauge predictionResult={predictionResult} loading={loading} />
-              {predictionResult && <RiskMetrics predictionResult={predictionResult} />}
-            </div>
-          </div>
-          ) : (
-          <div className="glass-panel p-lg">
-            <h2 className="text-xl font-bold mb-md text-primary" style={{ textAlign: 'left' }}>Model Architecture Deep Dive</h2>
-            <p className="text-text-secondary mb-sm" style={{ textAlign: 'left' }}>
-              This dashboard demonstrates a real-world application of machine learning in risk assessment. Below is the technical architecture and model behavior.
-            </p>
-            <hr className="border-border-glass mb-md" />
-
-            <div className="mb-md">
-              <h3 className="text-lg font-semibold mb-sm text-accent-emerald" style={{ textAlign: 'left' }}>Model Overview</h3>
-              <p className="text-text-secondary mb-xs" style={{ textAlign: 'left' }}>
-                The system uses a Logistic Regression model trained on the UCI Credit Card Default dataset. It predicts the probability of a customer defaulting on their credit card bill.
-              </p>
-              <ul className="text-sm text-text-muted list-disc pl-5" style={{ textAlign: 'left' }}>
-                <li><strong>Algorithm:</strong> Logistic Regression</li>
-                <li><strong>Dataset:</strong> 30,000 credit card holders</li>
-                <li><strong>Objective:</strong> Predict default in the next billing cycle</li>
-              </ul>
-            </div>
-
-            <div className="mb-md">
-              <h3 className="text-lg font-semibold mb-sm text-accent-amber" style={{ textAlign: 'left' }}>Feature Importance</h3>
-              <p className="text-text-secondary mb-xs" style={{ textAlign: 'left' }}>
-                The model relies on specific features to make predictions. These are the most influential factors:
-              </p>
-              <div className="grid grid-cols-1 gap-2" style={{ textAlign: 'left' }}>
-                <div className="bg-bg-secondary p-2 rounded border border-border-glass">
-                  <p className="text-sm text-text-primary"><strong>PAY_0 (Overdue Status):</strong> The most critical factor. Shows the status of the previous month's bill.</p>
-                </div>
-                <div className="bg-bg-secondary p-2 rounded border border-border-glass">
-                  <p className="text-sm text-text-primary"><strong>BILL_AMT1-6 (Bill Amounts):</strong> Recent bill amounts significantly impact risk assessment.</p>
-                </div>
-                <div className="bg-bg-secondary p-2 rounded border border-border-glass">
-                  <p className="text-sm text-text-primary"><strong>LIMIT_BAL (Credit Limit):</strong> The total credit line available to the customer.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-md">
-              <h3 className="text-lg font-semibold mb-sm text-accent-rose" style={{ textAlign: 'left' }}>Performance Metrics</h3>
-              <div className="grid grid-cols-2 gap-4 text-left">
-                <div>
-                  <p className="text-sm text-text-muted">Accuracy</p>
-                  <p className="text-xl text-text-primary">82%</p>
-                </div>
-                <div>
-                  <p className="text-sm text-text-muted">F1 Score (Balanced)</p>
-                  <p className="text-xl text-text-primary">72%</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center" style={{ textAlign: 'center' }}>
-              <a href="https://www.kaggle.com/datasets/uciml/credit-card-customers-prediction" target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-                Explore Dataset on Kaggle
-              </a>
-            </div>
-          </div>
-        )}
+          <h4>2. Feature Engineering Logic</h4>
+          <p>Prior to inference, the server transforms the 23 raw parameters into 48 features, including:</p>
+          <ul>
+            <li><strong>EWMA metrics:</strong> Exponentially Weighted Moving Averages to prioritize recent billing and repayment trends.</li>
+            <li><strong>Least Squares Trend:</strong> Computes the linear delay/debt trend slope to forecast next month's indicators.</li>
+            <li><strong>Utilization & Payment Ratios:</strong> Calculates revolving debt exposure and repayment consistency relative to bill size.</li>
+          </ul>
+        </div>
+      )}
     </div>
-    </div >
   );
 }
 
