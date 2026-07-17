@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 app = FastAPI(
     title="Credit Card Risk Analysis API",
-    description="An API serving default risk predictions with on-the-fly engineered features.",
+    description="An API serving default risk predictions with trained features.",
     version="1.0.0"
 )
 
@@ -21,69 +21,52 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load the trained model pipeline
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH = os.path.join(BASE_DIR, 'model', 'model.pkl')
 
-if not os.path.exists(MODEL_PATH):
-    raise FileNotFoundError(f"Model file not found at {MODEL_PATH}. Please run train.py first.")
-
-try:
-    model = joblib.load(MODEL_PATH)
-    print(f"Successfully loaded trained model pipeline from {MODEL_PATH}")
-except Exception as e:
-    raise RuntimeError(f"Error loading model from {MODEL_PATH}: {str(e)}")
-
+model = joblib.load(MODEL_PATH)
 
 class PredictionRequest(BaseModel):
-    LIMIT_BAL: float = Field(..., ge=0, description="Amount of the given credit (NT dollar)")
-    SEX: int = Field(..., ge=1, le=2, description="Gender (1 = male; 2 = female)")
-    EDUCATION: int = Field(..., ge=0, le=6, description="Education (1 = graduate school; 2 = university; 3 = high school; 4 = others)")
-    MARRIAGE: int = Field(..., ge=0, le=3, description="Marital status (1 = married; 2 = single; 3 = others)")
-    AGE: int = Field(..., ge=18, le=100, description="Age in years")
+    LIMIT_BAL: float = Field(..., ge=0)
+    SEX: int = Field(..., ge=1, le=2)
+    EDUCATION: int = Field(..., ge=0, le=6)
+    MARRIAGE: int = Field(..., ge=0, le=3)
+    AGE: int = Field(..., ge=18, le=100)
     
-    PAY_0: int = Field(..., description="Repayment status in September, 2005 (-2=No consumption, -1=Paid in full, 0=Revolving credit, 1=Delay 1 month, etc.)")
-    PAY_2: int = Field(..., description="Repayment status in August, 2005")
-    PAY_3: int = Field(..., description="Repayment status in July, 2005")
-    PAY_4: int = Field(..., description="Repayment status in June, 2005")
-    PAY_5: int = Field(..., description="Repayment status in May, 2005")
-    PAY_6: int = Field(..., description="Repayment status in April, 2005")
+    PAY_0: int = Field()
+    PAY_2: int = Field()
+    PAY_3: int = Field()
+    PAY_4: int = Field()
+    PAY_5: int = Field()
+    PAY_6: int = Field()
     
-    BILL_AMT1: float = Field(..., description="Amount of bill statement in September, 2005 (NT dollar)")
-    BILL_AMT2: float = Field(..., description="Amount of bill statement in August, 2005")
-    BILL_AMT3: float = Field(..., description="Amount of bill statement in July, 2005")
-    BILL_AMT4: float = Field(..., description="Amount of bill statement in June, 2005")
-    BILL_AMT5: float = Field(..., description="Amount of bill statement in May, 2005")
-    BILL_AMT6: float = Field(..., description="Amount of bill statement in April, 2005")
+    BILL_AMT1: float = Field()
+    BILL_AMT2: float = Field()
+    BILL_AMT3: float = Field()
+    BILL_AMT4: float = Field()
+    BILL_AMT5: float = Field()
+    BILL_AMT6: float = Field()
     
-    PAY_AMT1: float = Field(..., ge=0, description="Amount of previous payment in September, 2005 (NT dollar)")
-    PAY_AMT2: float = Field(..., ge=0, description="Amount of previous payment in August, 2005")
-    PAY_AMT3: float = Field(..., ge=0, description="Amount of previous payment in July, 2005")
-    PAY_AMT4: float = Field(..., ge=0, description="Amount of previous payment in June, 2005")
-    PAY_AMT5: float = Field(..., ge=0, description="Amount of previous payment in May, 2005")
-    PAY_AMT6: float = Field(..., ge=0, description="Amount of previous payment in April, 2005")
+    PAY_AMT1: float = Field(..., ge=0,)
+    PAY_AMT2: float = Field(..., ge=0)
+    PAY_AMT3: float = Field(..., ge=0)
+    PAY_AMT4: float = Field(..., ge=0)
+    PAY_AMT5: float = Field(..., ge=0)
+    PAY_AMT6: float = Field(..., ge=0)
 
 
 def preprocess_features(input_dict: dict) -> pd.DataFrame:
-    """
-    Applies the identical feature engineering steps as in the train.py pipeline.
-    """
-    # Create DataFrame with one row
-    df = pd.DataFrame([input_dict])
     
-    # 1. Categorical updates
+    df = pd.DataFrame([input_dict])
     df['EDUCATION'] = df['EDUCATION'].replace({0: 4, 5: 4, 6: 4})
     df['MARRIAGE'] = df['MARRIAGE'].replace({0: 3})
     
-    # 2. AVG_UTIL_RATE = mean(BILL_AMTx / LIMIT_BAL)
     bill_cols = ['BILL_AMT1', 'BILL_AMT2', 'BILL_AMT3', 'BILL_AMT4', 'BILL_AMT5', 'BILL_AMT6']
     df['AVG_UTIL_RATE'] = df[bill_cols].div(df['LIMIT_BAL'], axis=0).mean(axis=1)
     
-    # 3. TOTAL_DELAY_MONTHS = count of PAY_x values > 0
     pay_delay_cols_6m = ['PAY_0', 'PAY_2', 'PAY_3', 'PAY_4', 'PAY_5', 'PAY_6']
     df['TOTAL_DELAY_MONTHS'] = df[pay_delay_cols_6m].gt(0).sum(axis=1)
     
-    # 4. AVG_PAY_RATIO = mean(PAY_AMTx / BILL_AMTx where BILL_AMTx > 0)
     pay_amt_cols = ['PAY_AMT1', 'PAY_AMT2', 'PAY_AMT3', 'PAY_AMT4', 'PAY_AMT5', 'PAY_AMT6']
     bill_values = df[bill_cols].replace(0, np.nan).to_numpy()
     pay_values = df[pay_amt_cols].to_numpy()
@@ -113,7 +96,6 @@ def preprocess_features(input_dict: dict) -> pd.DataFrame:
     delay_values_arr = df[pay_delay_cols_6m].to_numpy()
     df['PAY_DELAY_EWMA'] = np.dot(delay_values_arr, weights)
     
-    # 7. Recent Repayment Delay Momentum
     pay_delay_cols_3m = ['PAY_0', 'PAY_2', 'PAY_3']
     df['PAY_DELAY_AVG_3M'] = df[pay_delay_cols_3m].mean(axis=1)
     df['PAY_DELAY_AVG_6M'] = df[pay_delay_cols_6m].mean(axis=1)
