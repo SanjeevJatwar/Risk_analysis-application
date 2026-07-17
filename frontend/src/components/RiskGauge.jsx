@@ -42,7 +42,6 @@ export default function RiskGauge({ predictionResult, loading }) {
             <line x1="12" y1="8" x2="12.01" y2="8"></line>
           </svg>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: '8px' }}>Awaiting Risk Assessment</h3>
-          <p style={{ fontSize: '0.85rem', maxWidth: '300px', margin: '0 auto' }}>Adjust the client variables on the left and click "Assess Credit Default Risk" to trigger XGBoost model prediction.</p>
         </div>
       </div>
     );
