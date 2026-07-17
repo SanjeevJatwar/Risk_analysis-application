@@ -5,14 +5,6 @@ export default function RiskMetrics({ predictionResult }) {
 
   return (
     <div className="glass-panel fade-in" style={{ padding: '20px' }}>
-      <h3 style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '14px', margin: 0 }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-blue)" strokeWidth="2.5">
-          <line x1="18" y1="20" x2="18" y2="10"></line>
-          <line x1="12" y1="20" x2="12" y2="4"></line>
-          <line x1="6" y1="20" x2="6" y2="14"></line>
-        </svg>
-        Real-time Engineered Features (Talking Points)
-      </h3>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '14px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '6px' }}>
@@ -44,14 +36,7 @@ export default function RiskMetrics({ predictionResult }) {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '6px' }}>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Debt Escalation (3M &gt; 6M Avg)</span>
-          <span style={{
-            fontSize: '0.85rem',
-            fontWeight: '600',
-            color: predictionResult.metrics.bill_trend_up ? 'var(--accent-rose)' : 'var(--accent-emerald)'
-          }}>
-            {predictionResult.metrics.bill_trend_up ? 'Yes' : 'No'}
-          </span>
+          
         </div>
       </div>
     </div>

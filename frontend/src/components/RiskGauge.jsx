@@ -130,7 +130,7 @@ export default function RiskGauge({ predictionResult, loading }) {
       </div>
 
       <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '340px', margin: '0 auto' }}>
-        The XGBoost classifier predicts a <strong>{(pVal * 100).toFixed(1)}% probability</strong> that this client will default on their credit payment next month.
+        Here, XGBoost model predicts a <strong>{(pVal * 100).toFixed(1)}% probability</strong> that the client will default next month.
       </p>
     </div>
   );
