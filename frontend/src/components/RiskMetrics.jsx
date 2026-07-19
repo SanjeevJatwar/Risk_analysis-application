@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function RiskMetrics({ predictionResult }) {
   if (!predictionResult) return null;
-  
+
   const { metrics } = predictionResult;
   return (
     <div style={{ marginTop: '15px', border: '1px solid #ccc', padding: '15px', borderRadius: '5px', textAlign: 'left' }}>

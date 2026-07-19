@@ -6,7 +6,7 @@ export default function TechnicalExplainer() {
       <h2 style={{ fontSize: '1.4rem', marginBottom: '14px', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px', marginTop: 0 }}>
         Technical Portfolio Details for Interviews
       </h2>
-      
+
       <p style={{ marginBottom: '20px', fontSize: '0.95rem', lineHeight: '1.6' }}>
         This project demonstrates a production-grade integration of a machine learning workflow. In interviews, you can leverage this architecture to showcase your skills in <strong>Feature Engineering</strong>, <strong>Model Deployment</strong>, and <strong>Interactive UI Design</strong>.
       </p>
@@ -43,7 +43,7 @@ export default function TechnicalExplainer() {
       </p>
 
       <div className="code-panel">
-{`# Backend prediction workflow in app.py
+        {`# Backend prediction workflow in app.py
 @app.post("/predict")
 def predict_risk(req: PredictionRequest):
     input_data = req.model_dump()

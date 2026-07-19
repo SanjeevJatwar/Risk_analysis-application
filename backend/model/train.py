@@ -202,7 +202,7 @@ if __name__ == '__main__':
     from xgboost import XGBClassifier
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
     log_reg = LogisticRegression(class_weight='balanced', random_state=42)
-    xgb_clf = XGBClassifier(class_weight='balanced', random_state=42)
+    xgb_clf = XGBClassifier(scale_pos_weight=3.5, random_state=42)
     models = {
         "LogisticRegression": Pipeline([("model", log_reg)]),
         "XGClassifier": Pipeline([("model", xgb_clf)]),
@@ -243,6 +243,7 @@ if __name__ == '__main__':
             "F1": f1_score(y_test, y_pred),
             "AUC_ROC": roc_auc_score(y_test, y_prob),
         })
+
 
 
 

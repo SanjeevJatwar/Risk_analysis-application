@@ -9,7 +9,7 @@
   --bg-primary: #895d92;
   --bg-secondary: #b7c2db;
   --bg-tertiary: #5b85e7;
-  
+
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
@@ -30,12 +30,17 @@ body {
 
   min-height: 100vh;
   background: radial-gradient(circle at 10% 20%, rgb(96, 131, 82) 0%, rgba(9, 13, 26, 1) 90%);
-  
+
 }
 
 
 /* Typography styles */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Outfit', sans-serif;
   color: var(--text-primary);
   font-weight: 600;
@@ -57,7 +62,8 @@ p {
   text-align: left;
 }
 
-.form-select, .form-input {
+.form-select,
+.form-input {
   width: 100%;
   padding: 10px 14px;
   background: rgba(203, 211, 50, 0.6);
@@ -118,6 +124,7 @@ p {
   border: 1px solid rgba(16, 185, 129, 0.2);
   color: #a7f3d0;
 }
+
 .btn-emerald:hover {
   background: rgba(16, 185, 129, 0.2);
   border-color: rgba(16, 185, 129, 0.4);
@@ -128,6 +135,7 @@ p {
   border: 1px solid rgba(244, 63, 94, 0.2);
   color: #fecdd3;
 }
+
 .btn-rose:hover {
   background: rgba(244, 63, 94, 0.2);
   border-color: rgba(244, 63, 94, 0.4);
@@ -182,13 +190,29 @@ p {
   flex-direction: row;
 }
 
-.gap-sm { gap: 0.5rem; }
-.gap-md { gap: 1rem; }
-.gap-lg { gap: 1.5rem; }
+.gap-sm {
+  gap: 0.5rem;
+}
 
-.mt-md { margin-top: 1rem; }
-.mb-sm { margin-bottom: 0.5rem; }
-.mb-md { margin-bottom: 1rem; }
+.gap-md {
+  gap: 1rem;
+}
+
+.gap-lg {
+  gap: 1.5rem;
+}
+
+.mt-md {
+  margin-top: 1rem;
+}
+
+.mb-sm {
+  margin-bottom: 0.5rem;
+}
+
+.mb-md {
+  margin-bottom: 1rem;
+}
 
 /* Tabs Navigation */
 .tabs-container {

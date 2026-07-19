@@ -75,8 +75,8 @@ function App() {
 
     const payload = {};
     const numericKeys = [
-      'LIMIT_BAL', 'BILL_AMT1', 'BILL_AMT2', 'BILL_AMT3', 
-      'BILL_AMT4', 'BILL_AMT5', 'BILL_AMT6', 
+      'LIMIT_BAL', 'BILL_AMT1', 'BILL_AMT2', 'BILL_AMT3',
+      'BILL_AMT4', 'BILL_AMT5', 'BILL_AMT6',
       'PAY_AMT1', 'PAY_AMT2', 'PAY_AMT3', 'PAY_AMT4', 'PAY_AMT5', 'PAY_AMT6'
     ];
     for (const key in formData) {
@@ -121,14 +121,14 @@ function App() {
 
       {activeTab === 'evaluator' ? (
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px' }}>
-          <ClientForm 
-            formData={formData} 
-            handleInputChange={handleInputChange} 
-            loadProfile={loadProfile} 
-            handlePredict={handlePredict} 
-            loading={loading} 
-            MONTH_LABELS={MONTH_LABELS} 
-            profiles={PROFILES} 
+          <ClientForm
+            formData={formData}
+            handleInputChange={handleInputChange}
+            loadProfile={loadProfile}
+            handlePredict={handlePredict}
+            loading={loading}
+            MONTH_LABELS={MONTH_LABELS}
+            profiles={PROFILES}
           />
           <div>
             <RiskGauge predictionResult={predictionResult} loading={loading} />
@@ -139,7 +139,7 @@ function App() {
         <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '5px', textAlign: 'left' }}>
           <h3>Model Architecture & Performance</h3>
           <p>This application implements an end-to-end machine learning pipeline deploying a supervised classifier for default risk estimation.</p>
-          
+
           <h4>1. Model Pipeline Specs</h4>
           <ul>
             <li><strong>Model Algorithm:</strong> XGBoost Classifier</li>
