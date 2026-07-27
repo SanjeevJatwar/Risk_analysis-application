@@ -6,3 +6,7 @@ matplotlib
 ipykernel
 jupyter
 seaborn
+fastapi
+uvicorn
+pydantic
+joblib
